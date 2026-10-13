@@ -31,14 +31,11 @@ public class PaymentService {
         return true;
     }
 
+    // TODO: not implemented yet
     public boolean refund() {
-        Order order = orderService.getOrder();
-        if (order == null || order.getStatus() != OrderStatus.PAID) {
-            log.warn("Refund failed: no paid order");
-            return false;
-        }
-        order.setStatus(OrderStatus.CANCELLED);
-        log.info("Order refunded");
-        return true;
+        // TODO: get the current order from orderService
+        // TODO: return false (and log a warning) if there is no order or its status is not PAID
+        // TODO: set the order status to CANCELLED, log it and return true
+        return false;
     }
 }
