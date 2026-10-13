@@ -1,20 +1,14 @@
 package org.tl;
 
 public class Order {
-    private final int id;
     private final String customer;
     private final double amount;
-    private String status;
+    private OrderStatus status;
 
-    public Order(int id, String customer, double amount) {
-        this.id = id;
+    public Order(String customer, double amount) {
         this.customer = customer;
         this.amount = amount;
-        this.status = "CREATED";
-    }
-
-    public int getId() {
-        return id;
+        this.status = OrderStatus.CREATED;
     }
 
     public String getCustomer() {
@@ -25,11 +19,11 @@ public class Order {
         return amount;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 }

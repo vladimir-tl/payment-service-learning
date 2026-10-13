@@ -1,28 +1,34 @@
 package org.tl;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OrderService {
-    private final Map<Integer, Order> orders = new HashMap<>();
-    private int nextId = 1;
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
+
+    private Order order;
 
     public Order createOrder(String customer, double amount) {
-        Order order = new Order(nextId++, customer, amount);
-        orders.put(order.getId(), order);
+        order = new Order(customer, amount);
+        log.info("Order created: customer={}, amount={}", customer, amount);
         return order;
     }
 
-    public boolean cancelOrder(int orderId) {
-        Order order = orders.get(orderId);
-        if (order == null || order.getStatus().equals("PAID")) {
+    public boolean cancelOrder() {
+        if (order == null) {
+            log.warn("Cancel failed: no order");
             return false;
         }
-        order.setStatus("CANCELLED");
+        if (order.getStatus() == OrderStatus.PAID) {
+            log.warn("Cancel failed: order is already paid");
+            return false;
+        }
+        order.setStatus(OrderStatus.CANCELLED);
+        log.info("Order cancelled");
         return true;
     }
 
-    public Order getOrder(int orderId) {
-        return orders.get(orderId);
+    public Order getOrder() {
+        return order;
     }
 }

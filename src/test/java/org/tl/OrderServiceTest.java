@@ -20,24 +20,24 @@ class OrderServiceTest {
         assertNotNull(order);
         assertEquals("Ivan", order.getCustomer());
         assertEquals(100.0, order.getAmount());
-        assertEquals("CREATED", order.getStatus());
+        assertEquals(OrderStatus.CREATED, order.getStatus());
     }
 
     @Test
     void cancelOrder_shouldSetCancelledStatus() {
         Order order = orderService.createOrder("Ivan", 100.0);
 
-        assertTrue(orderService.cancelOrder(order.getId()));
-        assertEquals("CANCELLED", orderService.getOrder(order.getId()).getStatus());
+        assertTrue(orderService.cancelOrder());
+        assertEquals(OrderStatus.CANCELLED, orderService.getOrder().getStatus());
     }
 
     @Test
     void cancelOrder_shouldReturnFalseForUnknownOrder() {
-        assertFalse(orderService.cancelOrder(999));
+        assertFalse(orderService.cancelOrder());
     }
 
     @Test
     void getOrder_shouldReturnNullForUnknownOrder() {
-        assertNull(orderService.getOrder(999));
+        assertNull(orderService.getOrder());
     }
 }

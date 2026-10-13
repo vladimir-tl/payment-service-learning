@@ -19,39 +19,39 @@ class PaymentServiceTest {
     void pay_shouldMarkOrderAsPaid() {
         Order order = orderService.createOrder("Ivan", 100.0);
 
-        assertTrue(paymentService.pay(order.getId(), 100.0));
-        assertEquals("PAID", order.getStatus());
+        assertTrue(paymentService.pay(100.0));
+        assertEquals(OrderStatus.PAID, order.getStatus());
     }
 
     @Test
     void pay_shouldFailOnWrongAmount() {
         Order order = orderService.createOrder("Ivan", 100.0);
 
-        assertFalse(paymentService.pay(order.getId(), 50.0));
-        assertEquals("CREATED", order.getStatus());
+        assertFalse(paymentService.pay(50.0));
+        assertEquals(OrderStatus.CREATED, order.getStatus());
     }
 
     @Test
     void pay_shouldFailForCancelledOrder() {
         Order order = orderService.createOrder("Ivan", 100.0);
-        orderService.cancelOrder(order.getId());
+        orderService.cancelOrder();
 
-        assertFalse(paymentService.pay(order.getId(), 100.0));
+        assertFalse(paymentService.pay(100.0));
     }
 
     @Test
     void refund_shouldCancelPaidOrder() {
         Order order = orderService.createOrder("Ivan", 100.0);
-        paymentService.pay(order.getId(), 100.0);
+        paymentService.pay(100.0);
 
-        assertTrue(paymentService.refund(order.getId()));
-        assertEquals("CANCELLED", order.getStatus());
+        assertTrue(paymentService.refund());
+        assertEquals(OrderStatus.CANCELLED, order.getStatus());
     }
 
     @Test
     void refund_shouldFailForUnpaidOrder() {
         Order order = orderService.createOrder("Ivan", 100.0);
 
-        assertFalse(paymentService.refund(order.getId()));
+        assertFalse(paymentService.refund());
     }
 }

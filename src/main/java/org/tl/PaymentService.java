@@ -1,27 +1,44 @@
 package org.tl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PaymentService {
+    private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
+
     private final OrderService orderService;
 
     public PaymentService(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    public boolean pay(int orderId, double amount) {
-        Order order = orderService.getOrder(orderId);
-        if (order == null || !order.getStatus().equals("CREATED") || order.getAmount() != amount) {
+    public boolean pay(double amount) {
+        Order order = orderService.getOrder();
+        if (order == null) {
+            log.warn("Payment failed: no order");
             return false;
         }
-        order.setStatus("PAID");
+        if (order.getStatus() != OrderStatus.CREATED) {
+            log.warn("Payment failed: order has status {}", order.getStatus());
+            return false;
+        }
+        if (order.getAmount() != amount) {
+            log.warn("Payment failed: amount mismatch, expected={}, got={}", order.getAmount(), amount);
+            return false;
+        }
+        order.setStatus(OrderStatus.PAID);
+        log.info("Order paid: amount={}", amount);
         return true;
     }
 
-    public boolean refund(int orderId) {
-        Order order = orderService.getOrder(orderId);
-        if (order == null || !order.getStatus().equals("PAID")) {
+    public boolean refund() {
+        Order order = orderService.getOrder();
+        if (order == null || order.getStatus() != OrderStatus.PAID) {
+            log.warn("Refund failed: no paid order");
             return false;
         }
-        order.setStatus("CANCELLED");
+        order.setStatus(OrderStatus.CANCELLED);
+        log.info("Order refunded");
         return true;
     }
 }
