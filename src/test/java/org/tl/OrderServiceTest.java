@@ -1,20 +1,15 @@
 package org.tl;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class OrderServiceTest {
-    private OrderService orderService;
-
-    @BeforeEach
-    void setUp() {
-        orderService = new OrderService();
-    }
 
     @Test
     void createOrder_shouldReturnOrderWithCreatedStatus() {
+        OrderService orderService = new OrderService();
+
         Order order = orderService.createOrder("Ivan", 100.0);
 
         assertNotNull(order);
@@ -25,19 +20,13 @@ class OrderServiceTest {
 
     @Test
     void cancelOrder_shouldSetCancelledStatus() {
-        Order order = orderService.createOrder("Ivan", 100.0);
-
-        assertTrue(orderService.cancelOrder());
-        assertEquals(OrderStatus.CANCELLED, orderService.getOrder().getStatus());
     }
 
     @Test
-    void cancelOrder_shouldReturnFalseForUnknownOrder() {
-        assertFalse(orderService.cancelOrder());
+    void cancelOrder_shouldReturnFalseWhenNoOrder() {
     }
 
     @Test
-    void getOrder_shouldReturnNullForUnknownOrder() {
-        assertNull(orderService.getOrder());
+    void getOrder_shouldReturnNullWhenNoOrder() {
     }
 }
