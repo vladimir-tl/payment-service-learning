@@ -23,6 +23,7 @@ public class OrderService {
             log.warn("Cancel failed: order is already paid");
             return false;
         }
+        // TODO: return false (and log a warning) if the order is already CANCELLED
         order.setStatus(OrderStatus.CANCELLED);
         log.info("Order cancelled");
         return true;
